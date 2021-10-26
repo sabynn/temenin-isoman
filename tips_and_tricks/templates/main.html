@@ -18,7 +18,28 @@
 {% block content %}
 {% include 'carousel.html' %}
 
-<!-- Add New Article Button -->
+{% if messages %}
+  {% for message in messages %}
+  <div class="text-center d-flex justify-content-center">
+    <div
+      class="alert alert-danger alert-dismissible fade show mt-4"
+      role="alert"
+    >
+      <span class="alert-text  text-white">{{ message }}</span>
+      <button
+        type="button"
+        class="btn-close btn-lg"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      >
+      <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  {% endfor %}
+{% endif %}
+
+<!-- New Article Button -->
 <div class="text-center mt-3">
   <a
     class="btn btn-lg btn-dark"
@@ -28,6 +49,7 @@
     Add New Article
   </a>
 </div>
+<!-- Add New Article Button -->
 
 <!-- List of Articles -->
 <div class="container post-wrapper">
@@ -51,7 +73,6 @@
           </div>
         </div>
       </form>
-
     </div>
   </div>
   <!-- End Search -->
@@ -62,6 +83,7 @@
 <!-- End List of Articles -->
 
 <!-- Load More Button -->
+{% if all_articles|length > 3 %}
 <div class="text-center mt-5">
   <button
     type="button"
@@ -69,6 +91,7 @@
     id="loadmoreBtn"
   >Load More</button>
 </div>
+{% endif %}
 {% endblock content %}
 
 {% block javascript %}
@@ -126,19 +149,16 @@
               </div>
             </div>`;
           });
-
           $("#replaceable-content").append(_html);
           var _countTotal = $(".post-box").length;
           if (_countTotal == res.totalResult) {
             $("#loadmoreBtn").hide();
-          } 
+          }
           $("#loadmoreBtn").removeClass('disabled').text('Load More');
-
         }
       });
     });
   });
-
 
   // Search
   $(document).ready(function() {
@@ -148,7 +168,7 @@
         url: "{% url 'index_tips' %}",
         type: 'get',
         data: {
-          'page': $("#user-input").val(),
+          'q': $("#user-input").val(),
         },
         beforeSend: function() {
           $("#searchBtn").addClass('disabled').text('Loading..');
@@ -160,6 +180,14 @@
             $("#loadmoreBtn").hide();
           } else {
             $("#loadmoreBtn").show();
+          }
+
+          if ($(".post-box").length == 0) {
+            $("#replaceable-content").html(`
+              <div class="text-center mt-6">
+                <i class="fa fa-search fa-6x""></i>
+                <p class="lead mt-1">No Article Available</p>
+              </div>`);
           }
         }
       });

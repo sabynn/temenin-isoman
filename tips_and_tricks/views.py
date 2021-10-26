@@ -1,22 +1,20 @@
+from main.decorators import *
 from django.shortcuts import render
-from tips_and_tricks.forms import AddForm
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
-from tips_and_tricks.models import TipsAndTrick
-from django.core.paginator import Paginator
 from django.core import serializers
-from django.http import JsonResponse
+from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect, JsonResponse
 from django.template.loader import render_to_string
-# Create your views here.
+from tips_and_tricks.models import TipsAndTrick
+from tips_and_tricks.forms import AddForm
 
 def index(request):
-    if 'page' in request.GET:
-        q=request.GET['page']
+    if 'q' in request.GET:
+        q = request.GET['q']
         articles=TipsAndTrick.objects.filter(title__icontains=q)
         if q == '':
             paginator=Paginator(articles, 3)
-            page_number = request.GET.get('page')
-            articles = paginator.get_page(page_number)
+            articles = paginator.get_page(q)
     else:
         articles=TipsAndTrick.objects.all()
 
@@ -30,10 +28,11 @@ def index(request):
     paginator=Paginator(articles, 3)
     page_number = request.GET.get('page')
     posts_obj = paginator.get_page(page_number)
-    response = {'articles': posts_obj}
+    response = {'articles': posts_obj, 'all_articles': articles}
     return render(request, 'main.html', response)
 
-@login_required(login_url='/admin/login/')
+
+@allowed_users(allowed_roles=['fasilitas_kesehatan', 'admin'], path='/tips-and-tricks', message='You are not allowed to add article')
 def add(request):
     form = AddForm(request.POST)
     if form.is_valid():
