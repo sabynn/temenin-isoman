@@ -18,29 +18,9 @@
 {% block content %}
 {% include 'carousel.html' %}
 
-{% if messages %}
-  {% for message in messages %}
-  <div class="text-center d-flex justify-content-center">
-    <div
-      class="alert alert-danger alert-dismissible fade show mt-4"
-      role="alert"
-    >
-      <span class="alert-text  text-white">{{ message }}</span>
-      <button
-        type="button"
-        class="btn-close btn-lg"
-        data-bs-dismiss="alert"
-        aria-label="Close"
-      >
-      <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  </div>
-  {% endfor %}
-{% endif %}
-
 <!-- New Article Button -->
-<div class="text-center mt-3">
+{% if user.groups.all.0.name == 'fasilitas_kesehatan'%}
+<div class="text-center mt-4">
   <a
     class="btn btn-lg btn-dark"
     id="add-button"
@@ -49,10 +29,11 @@
     Add New Article
   </a>
 </div>
-<!-- Add New Article Button -->
+{% endif %}
+<!-- End New Article Button -->
 
 <!-- List of Articles -->
-<div class="container post-wrapper">
+<div class="container post-wrapper mt-3">
   <!-- Search Start -->
   <div class="col d-flex justify-content-center">
     <div class="card border shadow w-80">
@@ -92,6 +73,7 @@
   >Load More</button>
 </div>
 {% endif %}
+<!-- End Load More Button -->
 {% endblock content %}
 
 {% block javascript %}

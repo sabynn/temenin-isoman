@@ -2,7 +2,6 @@ from main.decorators import *
 from django.shortcuts import render
 from django.core import serializers
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
 from django.template.loader import render_to_string
 from tips_and_tricks.models import TipsAndTrick
@@ -32,7 +31,6 @@ def index(request):
     return render(request, 'main.html', response)
 
 
-@allowed_users(allowed_roles=['fasilitas_kesehatan', 'admin'], path='/tips-and-tricks', message='You are not allowed to add article')
 def add(request):
     form = AddForm(request.POST)
     if form.is_valid():
