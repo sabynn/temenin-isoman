@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'deteksi_mandiri',
     'tips_and_tricks',
 ]
 
