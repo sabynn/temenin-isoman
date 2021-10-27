@@ -74,3 +74,16 @@ def get_request_data(request, id):
     # id di sini adalah id dari rumah sakit
     data = serializers.serialize('json', BedRequest.objects.filter(rs=id))
     return HttpResponse(data, content_type='application/json')
+
+
+def paginate(request):
+    page = request.GET.get('page', 1)
+    rs = request.GET.get('rs', None)
+
+    # Nomor konten yang akan diambil dari tabel
+    starting_number = (page-1)*5
+    ending_number = page*5
+
+    # Return data paginasi
+    data = serializers.serialize('json', RumahSakit.objects.filter(rs=rs))
+    return HttpResponse(data, content_type='application/json')

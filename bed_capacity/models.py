@@ -1,6 +1,16 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
+
+
+def validate_telp(value):
+    if (not value.isdigit()):
+        raise ValidationError(
+            _('%(value)s bukun nomor telpon yang valid'),
+            params={'value': value},
+        )
 
 
 class RumahSakit(models.Model):
@@ -8,18 +18,12 @@ class RumahSakit(models.Model):
     alamat = models.CharField(max_length=60)
     kapasitas = models.IntegerField()
     isi = models.IntegerField()
-    telp = models.CharField(max_length=25)
+    telp = models.CharField(max_length=25, validators=[validate_telp])
 
     kode_lokasi = models.CharField(max_length=6)
 
     def __str__(self):
         return self.nama
-
-    def tambah_kapasitas(self):
-        self.isi += 1
-
-    def cek_penuh(self):
-        return isi >= kapasitas
 
 
 class BedRequest(models.Model):
@@ -30,4 +34,4 @@ class BedRequest(models.Model):
     alamat = models.CharField(max_length=60)
     gender = models.CharField(max_length=1, choices=GENDER, default='L')
     umur = models.IntegerField()
-    telp = models.CharField(max_length=15)
+    telp = models.CharField(max_length=15, validators=[validate_telp])

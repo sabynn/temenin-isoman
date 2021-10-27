@@ -143,12 +143,14 @@
             }
         });
         // Ketika fetch sudah sukses, baru kita ubah laman
-        $(document).ready(function() {
-            setTimeout(function() {
-                $("#select-rs").val( sessionStorage.getItem('selectedRS'));
-                $('#search-btn').trigger('click');
-            }, 250);
-        });
+        if (sessionStorage.getItem('selectedRS') != null) {
+            $(document).ready(function() {
+                setTimeout(function() {
+                    $("#select-rs").val( sessionStorage.getItem('selectedRS'));
+                    $('#search-btn').trigger('click');
+                }, 250);
+            });
+        }
 
         console.log("success fetching rs data");
     });

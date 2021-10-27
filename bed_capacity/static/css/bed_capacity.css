@@ -8,6 +8,10 @@
   margin-right: 0;
 }
 
+.data-container {
+  height: 35px;
+}
+
 .main-header {
   background-color: #212027;
 }

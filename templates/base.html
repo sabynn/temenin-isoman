@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{% static 'css/material-kit.css' %}" />
 
     <!-- CSS stylesheet -->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
 
     <!-- Fonts -->
     <link
@@ -51,12 +51,22 @@
       src="https://demos.creative-tim.com/material-kit/assets/js/material-kit.min.js?v=3.0.0"
     ></script>
 
+    <!-- jQuery script -->
+    <script 
+      type="text/javascript"
+      src="//code.jquery.com/jquery-1.11.1.min.js"
+    ></script>
+
     {% block meta %} {% endblock meta %}
   </head>
 
   <body class="user-select-none">
-    {% include 'navbar.html' %} 
-    {% block content %} {% endblock content %} 
+    {% block navbar %}
+      {% include 'navbar.html' with variant=variant %}
+    {% endblock navbar %} 
+
+    {% block content %} {% endblock content%}
+
     {% include 'footer.html' %}
   </body>
 </html>
