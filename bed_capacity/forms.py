@@ -1,9 +1,10 @@
 
 from django import forms
-from .models import RumahSakit, BedRequest, validate_telp
-
+from .models import RumahSakit, BedRequest
 
 # creating a form
+
+
 class BedRequestForm(forms.ModelForm):
     # create meta class
     class Meta:
@@ -23,8 +24,4 @@ class BedRequestForm(forms.ModelForm):
             'alamat': forms.Textarea(),
             'gender': forms.RadioSelect(),
             'umur': forms.NumberInput(),
-        }
-
-        validators = {
-            'telp': [validate_telp]
         }

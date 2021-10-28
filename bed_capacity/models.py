@@ -13,6 +13,13 @@ def validate_telp(value):
         )
 
 
+class Wilayah(models.Model):
+    nama = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.nama
+
+
 class RumahSakit(models.Model):
     nama = models.CharField(max_length=40)
     alamat = models.CharField(max_length=60)
@@ -20,7 +27,9 @@ class RumahSakit(models.Model):
     isi = models.IntegerField()
     telp = models.CharField(max_length=25, validators=[validate_telp])
 
-    kode_lokasi = models.CharField(max_length=6)
+    #kode_lokasi = models.CharField(max_length=25, null=True)
+    kode_lokasi = models.ForeignKey(
+        Wilayah, on_delete=models.CASCADE, null=True, default='')
 
     def __str__(self):
         return self.nama

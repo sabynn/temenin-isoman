@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.core import serializers
 from django.http.response import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
-from .models import RumahSakit, BedRequest
+from .models import RumahSakit, BedRequest, Wilayah
 from .forms import BedRequestForm
 
 # Create your views here.
@@ -14,9 +15,9 @@ def bed_capacity(request):
     # add the dictionary during initialization
     form = BedRequestForm(request.POST or None, request.FILES or None)
     if form.is_valid():
-        id_ = request.POST['rs_input']
+        id = request.POST['rs_input']
         instance = form.save(commit=False)
-        instance.rs = RumahSakit.objects.get(id=id_)
+        instance.rs = RumahSakit.objects.get(id=id)
         instance.save()
         return HttpResponseRedirect('/bed_capacity')
 
@@ -26,6 +27,7 @@ def bed_capacity(request):
     return render(request, 'main/bed_capacity.html', response)
 
 
+@login_required(login_url='/admin/login/')
 def bed_request_admin(request):
     response = {}
 
@@ -55,8 +57,9 @@ def bed_request_admin(request):
     return render(request, 'main/bed_request_admin.html', response)
 
 
-def bed_data_json(request):
-    data = serializers.serialize('json', RumahSakit.objects.all())
+def bed_data_json(request, id):
+    data = serializers.serialize(
+        'json', RumahSakit.objects.filter(kode_lokasi=id))
     return HttpResponse(data, content_type="application/json")
 
 
@@ -65,25 +68,19 @@ def get_rs_data(request, id):
     return HttpResponse(data, content_type='application/json')
 
 
+@login_required(login_url='/admin/login/')
 def request_data_json(request):
     data = serializers.serialize('json', BedRequest.objects.all())
     return HttpResponse(data, content_type="application/json")
 
 
+@login_required(login_url='/admin/login/')
 def get_request_data(request, id):
     # id di sini adalah id dari rumah sakit
     data = serializers.serialize('json', BedRequest.objects.filter(rs=id))
     return HttpResponse(data, content_type='application/json')
 
 
-def paginate(request):
-    page = request.GET.get('page', 1)
-    rs = request.GET.get('rs', None)
-
-    # Nomor konten yang akan diambil dari tabel
-    starting_number = (page-1)*5
-    ending_number = page*5
-
-    # Return data paginasi
-    data = serializers.serialize('json', RumahSakit.objects.filter(rs=rs))
-    return HttpResponse(data, content_type='application/json')
+def wilayah_json(request):
+    data = serializers.serialize('json', Wilayah.objects.all())
+    return HttpResponse(data, content_type="application/json")

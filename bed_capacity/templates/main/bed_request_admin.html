@@ -4,12 +4,14 @@
 {% block meta %}
 <title>Admin Rumah Sakit</title>
 
+<!--Modal scripts-->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-
+<!--local css and js scripts-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{% static 'js/bed_request_admin.js' %}"></script>
 <link rel="stylesheet" href='{% static "css/bed_capacity.css" %}'>
 {% endblock meta %} 
 
@@ -35,12 +37,12 @@
                 di <span id='nama-rs'></span>?</p>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" id='batal-btn'>Batal</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" id='batal-btn'>Batal</button>
             <form action="" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="kode-request" id="kode-request" value=''>
                 <input type="hidden" name="kode-aksi" id="kode-aksi" value=''>
-                <input type="submit" name="acc-del-requester" class="btn btn-light btn-sm" value='Konfirmasi'>
+                <input type="submit" name="acc-del-requester" class="btn btn-success" value='Konfirmasi'>
             </form>
         </div>
       </div>
@@ -68,8 +70,8 @@
             </div>
             <div class="modal-footer">
                 <input type="hidden" name="kode-rs" id="kode-rs" value="">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id='batal-btn2'>Batal</button>
-                <input type="submit" name="edit-rumah-sakit" class="btn btn-light btn-sm" value='Konfirmasi'>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id='batal-btn2'>Batal</button>
+                <input type="submit" name="edit-rumah-sakit" class="btn btn-success" value='Konfirmasi'>
             </div>
         </form>
       </div>
@@ -82,26 +84,46 @@
         <!--Card bagian untuk menunjukkan rumah sakit-->
         <div class="card">
             <div class="card-body" id="content-table">
-                <!--Query settings-->
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <select class="border border-dark form-select" id="select-rs" aria-label="Default select example" style="padding-left: 1rem; padding-right: 1rem;">
-                                <option selected>---</option>
-                            </select>
+                <!--Search and edit-->
+                <div class="card-body">
+                    <div class="container">
+                        <!--Bagian untuk selector wilayah-->
+                        <div class="row">
+                            <div class="col-md-1">
+                                <p>Wilayah:</p>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="border border-dark form-select form-select-sm" id="select-wil" aria-label="Default select example" style="padding-left: 1rem; padding-right: 1rem;">
+                                    <option selected>---</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-dark btn-sm" id="search-btn-1">Pilih</button>
+                            </div>
                         </div>
-                        <div class="col-md-2">
-                            <button type="button" class="btn btn-dark" id="search-btn">Search</button>
-                            <button type="button" class="btn btn-light" id="edit-btn">Edit</button>
-                        </div>
-                        <div class="col-md-4">
-                            <p style="padding-top: 10px;">isi/kapasitas = <span id="indikator-kapasitas">0/0</span></p>
+                        
+                        <!--Bagian untuk selector RS-->
+                        <div class="row">
+                            <div class="col-md-1">
+                                <p>RS:</p>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="border border-dark form-select form-select-sm" id="select-rs" aria-label="Default select example" style="padding-left: 1rem; padding-right: 1rem;">
+                                    <option selected>---</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-dark btn-sm" id="search-btn">Search</button>
+                                <button type="button" class="btn btn-light btn-sm" id="edit-btn">Edit</button>
+                            </div>
+                            <div class="col-md-2">
+                                <p style="padding-top: 5px;">isi/kapasitas = <span id="indikator-kapasitas">0/0</span></p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!--Table Head-->
-                <hr>
                 <div class="row" style="margin-bottom: 20px;">
                     <div class="col-md-10">
                         <h4>Request</h4>
@@ -111,9 +133,9 @@
                     </div>
                 </div>
                 <hr>
+
                 <!--Table Content-->
                 <div id='table-content'></div>
-
             </div>
             <!--prev/next button-->
             <div class="card-body">
@@ -127,159 +149,4 @@
         </div>
     </div>
 </div>
-
-<!--Script for fetching hospital data for the <select>-->
-<script>
-    $(document).ready(function() {
-        console.log("fetching rs data");
-        $.ajax({
-            url:"bed_data_json",
-            dataType: 'json',
-            success: function(res) {
-                $.each(res, function(i, rs) {
-                    var option = $(`<option value="${rs.pk}">${rs.fields.nama}</option>`);
-                    $("#select-rs").append(option);
-                });
-            }
-        });
-        // Ketika fetch sudah sukses, baru kita ubah laman
-        if (sessionStorage.getItem('selectedRS') != null) {
-            $(document).ready(function() {
-                setTimeout(function() {
-                    $("#select-rs").val( sessionStorage.getItem('selectedRS'));
-                    $('#search-btn').trigger('click');
-                }, 250);
-            });
-        }
-
-        console.log("success fetching rs data");
-    });
-</script>
-
-<!--Script for fetching requesters data, after choosing select-->
-<script>
-    $(document).ready(function() {
-        $("#search-btn").on('click', function() {
-            var selectedRS = $("#select-rs").val();
-
-            if (selectedRS == '---') {
-                alert("Silakan pilih rumah sakit terlebih dahulu!");
-                return;
-            }
-
-            // Set state supaya laman tidak hilang ketika di-refresh
-            sessionStorage.setItem('selectedRS', selectedRS);
-
-            // Ajax untuk fetch informasi rumah sakit
-            $.ajax({
-                url: 'bed_data_json/' + selectedRS,
-                dataType: 'json',
-                success: function(res) {
-                    var rs = res[0]
-                    $('#id-kapasitas').val(rs.fields.kapasitas);
-                    $('#id-isi').val(rs.fields.isi);
-                    $('#indikator-kapasitas').html(rs.fields.isi + ' / ' + rs.fields.kapasitas);
-                    $('#kode-rs').val(rs.pk);
-                }
-            })
-
-            // Ajax untuk fetch data request di rumah sakit tersebut
-            $.ajax({
-            url: `request_data_json/${selectedRS}`,
-            dataType: "json",
-            success: function(res) {
-                $('#table-content').empty();
-
-                if (res.length != 0) {
-                    $.each(res, function(i, rq) {
-                        var row = $(`<div class="requester-datarow" id="rq-${rq.pk}"></div>`);
-                        var c1 = $('<div class="col-md-10"></div>');
-                        var c2 = $('<div class="col-md-2"></div>');
-
-                        var btn_acc = $(`<button type="button" class="btn btn-success btn-sm" id="ac-${rq.pk}">Acc</button>`)
-                        btn_acc.click(function() {
-                            // Set teks modal
-                            $('#nama-aksi').html('menambahkan');
-                            $('#nama-rs').html($("#select-rs :selected").text());
-                            $('#nama-pasien').html(rq.fields.nama);
-
-                            // Set dan show modal
-                            $('#kode-aksi').val('acc');
-                            $('#kode-request').val(rq.pk);
-                            $('#exampleModalCenter').modal('show');
-                        });
-
-                        var btn_dec = $(`<button type="button" class="btn btn-danger btn-sm" id="de-${rq.pk}">Dec</button>`)
-                        btn_dec.click(function() {
-                            // Set teks modal
-                            $('#nama-aksi').html('menolak');
-                            $('#nama-rs').html($("#select-rs :selected").text());
-                            $('#nama-pasien').html(rq.fields.nama);
-
-                            // Set dan show modal
-                            $('#kode-aksi').val('acc');
-                            $('#kode-request').val(rq.pk);
-                            $('#exampleModalCenter').modal('show');
-                        });
-
-                        var btn_container = $('<div class="btn-group" role="group" aria-label="Basic example"></div>')
-                        btn_container.append(btn_acc);
-                        btn_container.append(btn_dec);
-
-
-                        c1.append(`
-                        <h5>${rq.fields.nama}</h5>
-                        <p>${rq.fields.gender == 'L' ? 'Laki-laki' : 'Perempuan'}, ${rq.fields.umur} tahun</p>
-                        <ul>
-                            <li>${rq.fields.telp}</li>
-                            <li>${rq.fields.alamat}</li>   
-                        </ul>
-                        `);
-                        c2.append(btn_container);
-                        
-                        row.append(c1);
-                        row.append(c2);
-
-                        $("#table-content").append(row);
-                    });
-                } else {
-                    $('#table-content').append(`
-                    <div style="text-align: center; height: 350px; vertical-align: middle; padding-top: 100px;">
-                    <h1 style="color: #cdcdcd;"> :) </h1>
-                    <h5 style="color: #cdcdcd;">Belum ada request terbaru dari ${$("#select-rs :selected").text()}</h5>
-                    </div>
-                    `)
-                }
-            }
-        });
-
-        });
-    });
-</script>
-
-<!--Miscellanious Script-->
-<!--Script untuk menutup modal-->
-<script>
-    $(document).ready(function() {
-        $('#batal-btn').on('click', function() {
-            $('#exampleModalCenter').modal('hide');
-        })
-    })
-</script>
-
-<script>
-    $(document).ready(function() {
-        $('#edit-btn').on('click', function() {
-            if ($("#select-rs").val() == '---') {
-                alert('Silakan pilih rumah sakit terlebih dahulu!');
-            } else {
-                $('#exampleModalCenter1').modal('show');
-            }
-        });
-
-        $('#batal-btn2').on('click', function() {
-            $('#exampleModalCenter1').modal('hide');
-        });
-    });
-</script>
 {% endblock %}
