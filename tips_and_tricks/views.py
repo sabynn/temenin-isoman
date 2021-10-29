@@ -10,12 +10,12 @@ from tips_and_tricks.forms import AddForm
 def index(request):
     if 'q' in request.GET:
         q = request.GET['q']
-        articles=TipsAndTrick.objects.filter(title__icontains=q)
+        articles=TipsAndTrick.objects.filter(title__icontains=q).order_by('id')
         if q == '':
             paginator=Paginator(articles, 3)
             articles = paginator.get_page(q)
     else:
-        articles=TipsAndTrick.objects.all()
+        articles=TipsAndTrick.objects.all().order_by('id')
 
     if request.is_ajax():
         html = render_to_string(
