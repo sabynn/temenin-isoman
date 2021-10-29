@@ -14,46 +14,56 @@ $(document).ready(function() {
     });
 });
 
-// Script for fetching hospital data from database (after selecting wilayah)
+// Function for fetching hospital data from database (after selecting wilayah)
+function getHospData() {
+    console.log("... fetching rs data");
+    var selectedWil = $("#select-wil").val();
+    var firstRS;
+
+    if (selectedWil == '---') {
+        alert("Silakan pilih wilayah terlebih dahulu!");
+        return;
+    }
+
+    // Set state supaya laman tidak hilang ketika di-refresh
+    sessionStorage.setItem('selectedWil', selectedWil);
+
+    $.ajax({
+        url:"bed_data_json/wil/" + selectedWil,
+        dataType: 'json',
+        success: function(res) {
+            firstRS = res[0].pk;
+
+            $('#select-rs').empty();
+
+            $.each(res, function(i, rs) {
+                var option = $(`<option value="${rs.pk}">${rs.fields.nama}</option>`);
+                $("#select-rs").append(option);
+
+            $('#select-rs').val(firstRS).change();
+            sessionStorage.setItem('selectedRS', firstRS);
+            });
+
+            console.log("success fetching rs data ...");
+
+            // Ketika fetch sudah sukses, baru kita ubah laman
+            if (sessionStorage.getItem('selectedRS') != null) {
+                $(document).ready(function() {
+                    setTimeout(function() {
+                        $("#select-rs").val(sessionStorage.getItem('selectedRS'));
+                        $('#search-btn').trigger('click');
+                    }, 250);
+                });
+            }
+        }
+    });
+}
+
+// Script for calling getHospData if change is detected
 $(document).ready(function() {
     // Start fetching on search btn click
-    $('#search-btn-1').on('click', function () {
-        console.log("... fetching rs data");
-
-        var selectedWil = $("#select-wil").val();
-
-        if (selectedWil == '---') {
-            alert("Silakan pilih wilayah terlebih dahulu!");
-            return;
-        }
-
-        // Set state supaya laman tidak hilang ketika di-refresh
-        sessionStorage.setItem('selectedWil', selectedWil);
-
-        $.ajax({
-            url:"bed_data_json/wil/" + selectedWil,
-            dataType: 'json',
-            success: function(res) {
-                $('#select-rs').empty();
-                $('#select-rs').append('<option selected>---</option>');
-
-                $.each(res, function(i, rs) {
-                    var option = $(`<option value="${rs.pk}">${rs.fields.nama}</option>`);
-                    $("#select-rs").append(option);
-                });
-                console.log("success fetching rs data ...");
-
-                // Ketika fetch sudah sukses, baru kita ubah laman
-                if (sessionStorage.getItem('selectedRS') != null) {
-                    $(document).ready(function() {
-                        setTimeout(function() {
-                            $("#select-rs").val(sessionStorage.getItem('selectedRS'));
-                            $('#search-btn').trigger('click');
-                        }, 250);
-                    });
-                }
-            }
-        });
+    $('#select-wil').change(function () {
+        getHospData();
     });
  
     // Ketika fetch sudah sukses, baru kita ubah laman
@@ -61,7 +71,7 @@ $(document).ready(function() {
         $(document).ready(function() {
             setTimeout(function() {
                 $("#select-wil").val(sessionStorage.getItem('selectedWil'));
-                $('#search-btn-1').trigger('click');
+                //$('#search-btn-1').trigger('click');
             }, 250);
         });
     }
@@ -70,6 +80,7 @@ $(document).ready(function() {
 // After selecting hospital, this script runs to fetch requesters data from selected hospital
 $(document).ready(function() {
     $("#search-btn").on('click', function() {
+    //$("#select-rs").change(function() {
         console.log("... fetching requesters data");
         var selectedRS = $("#select-rs").val();
 

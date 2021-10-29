@@ -17,16 +17,16 @@ $(document).ready(function() {
         $(document).ready(function() {
             setTimeout(function() {
                 $("#select-wil").val( sessionStorage.getItem('selectedWil'));
-                $('#search-btn').trigger('click');
-            }, 250);
+                getHospData();
+                //$('#search-btn').trigger('click');
+            }, 1000);
         });
     }
 });
 
-// Script for fetching hospitals data from database (after choosing wilayah)
-$(document).ready(function() {
-    $('#search-btn').on('click', function() {
-        var selectedWil = $("#select-wil").val();
+// function for fetching hospital data (after choosing wilayah)
+function getHospData() {
+    var selectedWil = $("#select-wil").val();
 
         // Simpan state wilayah sekarang agar tidak hilang ketika direfresh
         sessionStorage.setItem('selectedWil', selectedWil);
@@ -104,6 +104,13 @@ $(document).ready(function() {
                 }
             }
         });
+}
+
+// Script for calling getWilData() if change is detected
+$(document).ready(function() {
+    //$('#search-btn').on('click', function() {
+    $('#select-wil').change(function() {
+        getHospData();
     });
     
     console.log("success fetching data");
