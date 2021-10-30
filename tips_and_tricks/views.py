@@ -41,7 +41,7 @@ def add(request):
 
 
 def load_more(request):
-    offset=int(request.POST['offset'])
+    offset=int(request.GET['offset'])
     limit=3
     posts=TipsAndTrick.objects.all()[offset:limit+offset]
     totalData=TipsAndTrick.objects.count()
