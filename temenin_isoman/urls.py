@@ -21,5 +21,5 @@ urlpatterns = [
     path('', include('main.urls')),
     path('', include('django.contrib.auth.urls')),
     path('deteksi-mandiri/', include('deteksi_mandiri.urls')),
-    path('bed_capacity/', include('bed_capacity.urls')),
+    path('bed-capacity/', include('bed_capacity.urls')),
 ]
