@@ -85,3 +85,6 @@ def logout_user(request):
     # Redirect to home page.
     messages.success(request, 'You Have been logged out :D')
     return redirect('/')
+
+def about_us(request):
+    return render(request, 'about_us.html')
