@@ -25,4 +25,5 @@ urlpatterns = [
     path('deteksi-mandiri/', include('deteksi_mandiri.urls')),
     path('bed-capacity/', include('bed_capacity.urls')),
     path('tips-and-tricks/', include('tips_and_tricks.urls')),
+    path('happy-notes/', include('happy_notes.urls')),
 ]
