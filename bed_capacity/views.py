@@ -51,7 +51,7 @@ def bed_request_admin(request):
             rs.isi = request.POST['isi']
             rs.save()
 
-        return HttpResponseRedirect('/bed_capacity/adm')
+        return HttpResponseRedirect('/bed-capacity/adm')
 
     response['requests'] = BedRequest.objects.all().values()
     return render(request, 'main/bed_request_admin.html', response)
