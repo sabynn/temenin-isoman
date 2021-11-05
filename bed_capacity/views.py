@@ -19,7 +19,7 @@ def bed_capacity(request):
         instance = form.save(commit=False)
         instance.rs = RumahSakit.objects.get(id=id)
         instance.save()
-        return HttpResponseRedirect('/bed_capacity')
+        return HttpResponseRedirect('/bed-capacity')
 
     response["form"] = form
     response["rumahsakit"] = RumahSakit.objects.all().values()
