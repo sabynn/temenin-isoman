@@ -24,4 +24,5 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('deteksi-mandiri/', include('deteksi_mandiri.urls')),
     path('bed-capacity/', include('bed_capacity.urls')),
+    path('tips-and-tricks/', include('tips_and_tricks.urls')),
 ]

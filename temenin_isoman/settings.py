@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'obat',
     'deteksi_mandiri',
     'bed_capacity',
+    'tips_and_tricks',
 ]
 
 MIDDLEWARE = [
