@@ -55,13 +55,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'mathfilters',
     'main',
     'obat',
     'deteksi_mandiri',
     'bed_capacity',
     'tips_and_tricks',
     'happy_notes',
-    'emergency_contact'
+    'emergency_contact',
+    'checklist'
 ]
 
 MIDDLEWARE = [
