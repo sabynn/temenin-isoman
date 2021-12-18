@@ -21,11 +21,12 @@ urlpatterns = [
     path('', include('main.urls')),
     path('', include('django.contrib.auth.urls')),
 
-    path('obat/', include('obat.urls')),
-    path('deteksi-mandiri/', include('deteksi_mandiri.urls')),
     path('bed-capacity/', include('bed_capacity.urls')),
-    path('tips-and-tricks/', include('tips_and_tricks.urls')),
     path('checklist/', include('checklist.urls')),
+    path('deteksi-mandiri/', include('deteksi_mandiri.urls')),
+    path('emergency-contact/', include('emergency_contact.urls')),
     path('happy-notes/', include('happy_notes.urls')),
-    path('emergency-contact/', include('emergency_contact.urls'))
+    path('obat/', include('obat.urls')),
+    path('tips-and-tricks/', include('tips_and_tricks.urls')),
+    path('user/', include('user.urls')),
 ]
