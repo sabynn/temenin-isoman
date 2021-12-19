@@ -72,7 +72,6 @@ def add_from_flutter(request):
     data = json.loads(body_unicode)
     new_article = TipsAndTrick(**data)
     new_article.save()
-    print("YEAY INI DATANYA:", data)
     return JsonResponse({
         "success": "New Article Successfully Added",
     })
